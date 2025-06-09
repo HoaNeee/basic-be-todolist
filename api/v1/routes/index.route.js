@@ -4,6 +4,7 @@ const colorRoute = require("./color.route");
 const statusRoute = require("./status.route");
 const priorityRoute = require("./priority.route");
 const uploadRoute = require("../routes/upload.route");
+const notifyRoute = require("../routes/notify.route");
 
 const authMiddleware = require("../../../middleware/auth.middleware");
 
@@ -14,5 +15,6 @@ module.exports = (app) => {
   app.use(version + "/status", authMiddleware.requireAuth, statusRoute);
   app.use(version + "/priority", authMiddleware.requireAuth, priorityRoute);
   app.use(version + "/upload", authMiddleware.requireAuth, uploadRoute);
+  app.use(version + "/notify", authMiddleware.requireAuth, notifyRoute);
   app.use(version + "/users", userRoute);
 };

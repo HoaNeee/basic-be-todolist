@@ -3,6 +3,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const http = require("http");
 
 const routeVersion1 = require("./api/v1/routes/index.route");
 
@@ -11,6 +12,17 @@ const database = require("./config/database");
 database.connect();
 
 const app = express();
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const socket = require("./socket");
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+socket.connet(io);
 
 //cookie
 app.use(cookieParser());
@@ -24,7 +36,7 @@ app.use(bodyParser.json());
 //routeVersion1
 routeVersion1(app);
 
-app.listen(process.env.PORT, (err) => {
+server.listen(process.env.PORT, (err) => {
   if (err) {
     console.log(err);
   } else {

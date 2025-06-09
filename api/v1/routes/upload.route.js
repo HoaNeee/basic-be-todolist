@@ -6,8 +6,15 @@ const upload = multer();
 const uploadMiddleware = require("../../../middleware/uploadCloud.middleware");
 
 router.post(
-  "/",
+  "/task",
   upload.single("thumbnail"),
+  uploadMiddleware.uploadCloud,
+  controller.post
+);
+
+router.post(
+  "/user",
+  upload.single("avatar"),
   uploadMiddleware.uploadCloud,
   controller.post
 );

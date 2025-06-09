@@ -11,5 +11,11 @@ router.post("/otp", controller.otp);
 router.post("/reset-password", controller.resetPassword);
 router.get("/detail", authMiddleware.requireAuth, controller.detail);
 router.get("/list-user", authMiddleware.requireAuth, controller.listUser);
+router.patch("/edit", authMiddleware.requireAuth, controller.edit);
+router.patch(
+  "/change-password",
+  authMiddleware.requireAuth,
+  controller.changePassword
+);
 
 module.exports = router;

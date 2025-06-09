@@ -205,7 +205,7 @@ module.exports.resetPassword = async (req, res) => {
   }
 };
 
-// [GET] /api/v1/list-user
+// [GET] /api/v1/users/list-user
 module.exports.listUser = async (req, res) => {
   try {
     const id = String(req.user._id);
@@ -216,6 +216,69 @@ module.exports.listUser = async (req, res) => {
     res.json({
       code: 200,
       data: users,
+    });
+  } catch (error) {
+    res.json({
+      code: 500,
+      message: "An error occurred " + error,
+    });
+  }
+};
+
+// [PATCH] /api/v1/users/edit
+module.exports.edit = async (req, res) => {
+  try {
+    const id = req.user.id;
+    await User.updateOne({ _id: id }, req.body);
+    res.json({
+      code: 200,
+      message: "Successfully",
+    });
+  } catch (error) {
+    res.json({
+      code: 500,
+      message: "An error occurred " + error,
+    });
+  }
+};
+
+// [PATCH] /api/v1/users/change-password
+module.exports.changePassword = async (req, res) => {
+  try {
+    const currentPassowrd = req.body["current-password"];
+    const newPassowrd = req.body["new-password"];
+    const confirmPassowrd = req.body["confirm-password"];
+
+    const userId = req.user.id;
+
+    const user = await User.findOne({ _id: userId, deleted: false });
+    if (!user) {
+      res.json({
+        code: 404,
+        message: "Not found record!",
+      });
+      return;
+    }
+    if (user.password !== md5(currentPassowrd)) {
+      res.json({
+        code: 400,
+        message: "Current password not correct!",
+      });
+      return;
+    }
+
+    if (newPassowrd !== confirmPassowrd) {
+      res.json({
+        code: 400,
+        message: "Confirm password and password not match!",
+      });
+      return;
+    }
+    user.password = md5(newPassowrd);
+    await user.save();
+    res.json({
+      code: 200,
+      message: "Change password successfully",
     });
   } catch (error) {
     res.json({
