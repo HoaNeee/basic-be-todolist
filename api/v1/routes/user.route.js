@@ -17,5 +17,6 @@ router.patch(
   authMiddleware.requireAuth,
   controller.changePassword
 );
+router.post("/logout", authMiddleware.requireAuth, controller.logout);
 
 module.exports = router;

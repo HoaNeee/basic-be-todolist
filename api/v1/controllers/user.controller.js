@@ -215,6 +215,7 @@ module.exports.listUser = async (req, res) => {
     ); //status,...
     res.json({
       code: 200,
+      message: "OK",
       data: users,
     });
   } catch (error) {
@@ -279,6 +280,26 @@ module.exports.changePassword = async (req, res) => {
     res.json({
       code: 200,
       message: "Change password successfully",
+    });
+  } catch (error) {
+    res.json({
+      code: 500,
+      message: "An error occurred " + error,
+    });
+  }
+};
+
+// [POST] /api/v1/users/logout
+module.exports.logout = async (req, res) => {
+  try {
+    const id = String(req.user._id);
+
+    const token = generate.string(20);
+
+    await User.updateOne({ _id: id }, { token: token });
+    res.json({
+      code: 200,
+      message: "OK",
     });
   } catch (error) {
     res.json({
